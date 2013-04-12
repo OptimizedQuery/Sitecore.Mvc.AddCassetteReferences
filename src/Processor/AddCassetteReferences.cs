@@ -1,4 +1,4 @@
-﻿using Sitecore.Mvc.Pipelines.Response.BuildPageDefinition;
+﻿using Sitecore.Mvc.Pipelines.Response.GetPageRendering;
 using Sitecore.Mvc.Presentation;
 
 namespace Sitecore.Mvc.AddCassetteReferences.Processor
@@ -6,9 +6,9 @@ namespace Sitecore.Mvc.AddCassetteReferences.Processor
 	/// <summary>
 	/// mvc.BuildPageDefinition pipeline processor to dynamically reference Cassette Bundles
 	/// </summary>
-	public class AddCassetteReferences : BuildPageDefinitionProcessor
+	public class AddCassetteReferences : GetPageRenderingProcessor
 	{
-		public override void Process(BuildPageDefinitionArgs args)
+		public override void Process(GetPageRenderingArgs args)
 		{
 			ApplyDefaultReferences();
 			ApplyRenderingSpecificReferences(args);
@@ -30,11 +30,11 @@ namespace Sitecore.Mvc.AddCassetteReferences.Processor
 		/// Applies the rendering specific references to Cassette bundles.
 		/// </summary>
 		/// <param name="args">The args.</param>
-		protected void ApplyRenderingSpecificReferences(BuildPageDefinitionArgs args)
+		protected void ApplyRenderingSpecificReferences(GetPageRenderingArgs args)
 		{
 			foreach (Rendering rendering in args.PageContext.PageDefinition.Renderings)
 			{
-				switch (rendering.Id.ToString())
+				switch (rendering.RenderingItem.ID.ToString())
 				{
 					/* Example of adding Bundle references based on the current item having a specific reference
 					 * ItemReference is just a static class to reference ID's of specific items in Sitecore.
