@@ -1,6 +1,5 @@
-﻿using Sitecore.Data.Items;
-using Sitecore.Layouts;
-using Sitecore.Mvc.Pipelines.Response.BuildPageDefinition;
+﻿using Sitecore.Mvc.Pipelines.Response.BuildPageDefinition;
+using Sitecore.Mvc.Presentation;
 
 namespace Sitecore.Mvc.AddCassetteReferences.Processor
 {
@@ -11,13 +10,8 @@ namespace Sitecore.Mvc.AddCassetteReferences.Processor
 	{
 		public override void Process(BuildPageDefinitionArgs args)
 		{
-			Item currentItem = args.PageContext.Item;
-			DeviceItem currentDevice = args.PageContext.Device.DeviceItem;
-			if (currentItem != null && currentDevice != null)
-			{
-				ApplyDefaultReferences();
-				ApplyRenderingSpecificReferences(currentItem, currentDevice);
-			}
+			ApplyDefaultReferences();
+			ApplyRenderingSpecificReferences(args);
 		}
 
 		/// <summary>
@@ -35,13 +29,12 @@ namespace Sitecore.Mvc.AddCassetteReferences.Processor
 		/// <summary>
 		/// Applies the rendering specific references to Cassette bundles.
 		/// </summary>
-		/// <param name="currentItem">The current item.</param>
-		/// <param name="currentDevice">The current device.</param>
-		protected void ApplyRenderingSpecificReferences(Item currentItem, DeviceItem currentDevice)
+		/// <param name="args">The args.</param>
+		protected void ApplyRenderingSpecificReferences(BuildPageDefinitionArgs args)
 		{
-			foreach (RenderingReference renderingReference in currentItem.Visualization.GetRenderings(currentDevice, true))
+			foreach (Rendering rendering in args.PageContext.PageDefinition.Renderings)
 			{
-				switch (renderingReference.RenderingID.ToString())
+				switch (rendering.Id.ToString())
 				{
 					/* Example of adding Bundle references based on the current item having a specific reference
 					 * ItemReference is just a static class to reference ID's of specific items in Sitecore.
